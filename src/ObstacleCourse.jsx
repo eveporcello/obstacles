@@ -1,10 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
-import MuxPlayer from "@mux/mux-player-react";
+import { useState, useEffect, useRef } from "react";
+import "media-chrome/react";
 import "./ObstacleCourse.css";
-
-// Using a public image URL for the spinner
-const sunsetImageUrl =
-  "https://images.unsplash.com/photo-1573591173361-99696ce5e0a2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80";
+import sunsetImageUrl from "./assets/sunset.jpg";
 
 const ObstacleCourse = () => {
   // State for loading quiz and spinner
@@ -22,7 +19,8 @@ const ObstacleCourse = () => {
     "a4nOgmxGWg6gULfcBbAa00gXyfcwPnAFldF8RdsNyk8M"
   );
 
-  const playerRef = useRef(null);
+  const containerRef = useRef(null);
+  const videoRef = useRef(null);
 
   // Handle loading quiz submission
   const handleQuizSubmit = (e) => {
@@ -54,42 +52,45 @@ const ObstacleCourse = () => {
         clearInterval(interval);
         setIsLoading(false);
         setShowLoadingQuiz(false);
+
+        // Attempt to play video after loading
+        if (videoRef.current) {
+          videoRef.current
+            .play()
+            .catch((e) =>
+              console.log("Auto-play failed:", e)
+            );
+        }
       }
 
       setLoadingProgress(Math.min(progress, 100));
     }, 1000);
   };
 
-  // Play/pause video functions
-  const playVideo = () => {
-    if (playerRef.current && !isLoading) {
-      playerRef.current.play();
-      setIsPlaying(true);
-    }
-  };
-
-  const pauseVideo = () => {
-    if (playerRef.current) {
-      playerRef.current.pause();
-      setIsPlaying(false);
-    }
-  };
-
   return (
-    <div className="player-container">
-      {/* Mux Player */}
-      <MuxPlayer
-        ref={playerRef}
-        playbackId={playbackId}
-        streamType="on-demand"
-        metadata={{
-          video_title: "Video Player",
-          viewer_user_id: "user-123"
-        }}
-        paused={true} // Always paused initially
-        autoPlay={false}
-        controls={!showLoadingQuiz} // Only show controls after quiz
-      />
+    <div className="player-container" ref={containerRef}>
+      {/* Media Chrome Player */}
+      <media-controller>
+        <video
+          ref={videoRef}
+          slot="media"
+          src={`https://stream.mux.com/${playbackId}/high.mp4`}
+          crossorigin="anonymous"
+          preload="auto"
+          muted={false}
+          playsinline
+        ></video>
+
+        {/* Default Media Chrome controls */}
+        <media-control-bar>
+          <media-play-button></media-play-button>
+          <media-time-display></media-time-display>
+          <media-time-range></media-time-range>
+          <media-mute-button></media-mute-button>
+          <media-volume-range></media-volume-range>
+          <media-fullscreen-button></media-fullscreen-button>
+        </media-control-bar>
+      </media-controller>
 
       {/* Quiz Overlay */}
       {showLoadingQuiz && (
@@ -127,9 +128,21 @@ const ObstacleCourse = () => {
               />
               <button
                 onClick={() =>
-                  alert("Nice try! But you need to wait...")
+                  alert(
+                    "Nice try! But we need more time..."
+                  )
                 }
                 className="skip-button"
+                onMouseEnter={(e) => {
+                  // Button runs away when hovered
+                  e.target.style.transform = `translateX(${
+                    Math.random() > 0.5 ? 100 : -100
+                  }px)`;
+                  setTimeout(() => {
+                    e.target.style.transform =
+                      "translateX(0)";
+                  }, 800);
+                }}
               >
                 Skip
               </button>

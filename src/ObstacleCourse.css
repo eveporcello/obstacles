@@ -8,10 +8,21 @@
     overflow: hidden;
   }
   
-  /* Make the Mux player fill the container */
-  .player-container mux-player {
+  /* Media Chrome styling */
+  .player-container media-controller {
     width: 100%;
     height: 100%;
+    --media-primary-color: #FF7A00;
+    --media-secondary-color: #FFD166;
+    --media-control-background: rgba(0, 0, 0, 0.6);
+    --media-control-hover-background: rgba(30, 30, 30, 0.8);
+  }
+  
+  /* Make sure video fills the container */
+  .player-container video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
   }
   
   /* Overlay that sits on top of the video */
@@ -62,11 +73,10 @@
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: all 0.3s;
   }
   
-  .quiz-form button:hover,
-  .skip-button:hover {
+  .quiz-form button:hover {
     background: #FFA94D;
   }
   
@@ -120,11 +130,28 @@
     100% { transform: rotate(360deg); }
   }
   
+  /* Skip button with movement effect */
   .skip-button {
     margin-top: 10px;
     background: #888;
+    position: relative;
+    transition: transform 0.3s ease;
   }
   
   .skip-button:hover {
     background: #666;
+  }
+  
+  /* Media query for smaller screens */
+  @media (max-width: 768px) {
+    .quiz-form,
+    .loading-screen {
+      width: 90%;
+      padding: 15px;
+    }
+    
+    .spinner {
+      width: 120px;
+      height: 120px;
+    }
   }
