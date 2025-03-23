@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import "media-chrome/react";
+import MuxPlayer from "@mux/mux-player-react";
 import "./ObstacleCourse.css";
 import sunsetImageUrl from "./assets/sunset.jpg";
 
@@ -16,11 +16,11 @@ const ObstacleCourse = () => {
   // Video player state
   const [isPlaying, setIsPlaying] = useState(false);
   const [playbackId] = useState(
-    "a4nOgmxGWg6gULfcBbAa00gXyfcwPnAFldF8RdsNyk8M"
+    "nxzPZLvW02bQ4r4kSfeQwsYq6OwSx4tiH5f4IC1Uof01A"
   );
 
   const containerRef = useRef(null);
-  const videoRef = useRef(null);
+  const playerRef = useRef(null);
 
   // Handle loading quiz submission
   const handleQuizSubmit = (e) => {
@@ -54,12 +54,13 @@ const ObstacleCourse = () => {
         setShowLoadingQuiz(false);
 
         // Attempt to play video after loading
-        if (videoRef.current) {
-          videoRef.current
+        if (playerRef.current) {
+          playerRef.current
             .play()
             .catch((e) =>
               console.log("Auto-play failed:", e)
             );
+          setIsPlaying(true);
         }
       }
 
@@ -69,26 +70,19 @@ const ObstacleCourse = () => {
 
   return (
     <div className="player-container" ref={containerRef}>
-      <media-controller>
-        <video
-          ref={videoRef}
-          slot="media"
-          src={`https://stream.mux.com/${playbackId}/high.mp4`}
-          crossorigin="anonymous"
-          preload="auto"
-          muted={false}
-          playsinline
-        ></video>
-
-        <media-control-bar>
-          <media-play-button></media-play-button>
-          <media-time-display></media-time-display>
-          <media-time-range></media-time-range>
-          <media-mute-button></media-mute-button>
-          <media-volume-range></media-volume-range>
-          <media-fullscreen-button></media-fullscreen-button>
-        </media-control-bar>
-      </media-controller>
+      {/* Mux Player React Component - using the format from the Mux dashboard React tab */}
+      <MuxPlayer
+        ref={playerRef}
+        playbackId={playbackId}
+        metadataVideoTitle="Placeholder (optional)"
+        metadata-viewer-user-id="Placeholder (optional)"
+        primaryColor="#ffffff"
+        secondaryColor="#000000"
+        accentColor="#fa50b5"
+        streamType="on-demand"
+        // This will hide the Mux controls while our quiz overlay is showing
+        controls={!showLoadingQuiz}
+      />
 
       {showLoadingQuiz && (
         <div className="overlay">

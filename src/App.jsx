@@ -6,8 +6,7 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        <h1>VIDEO PLAYER CHALLENGE</h1>
-        <p>Wait for it...</p>
+        <h1>Video</h1>
       </header>
 
       <div className="player-wrapper">
@@ -15,10 +14,7 @@ function App() {
       </div>
 
       <footer>
-        <p>
-          Created for the Mux Video Challenge &copy;{" "}
-          {new Date().getFullYear()}
-        </p>
+        <p>{new Date().getFullYear()}</p>
       </footer>
     </div>
   );
