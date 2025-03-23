@@ -5,6 +5,8 @@ import sunsetImageUrl from "./assets/sunset.jpg";
 // Import the wagging finger GIF/video
 // Replace this path with the actual path to your GIF/video
 import waggingFingerGif from "./assets/wagging-finger.gif";
+import PlayButtonObstacle from "./PlayButtonObstacle";
+import "./PlayButtonObstacle.css";
 
 const ObstacleCourse = () => {
   // State for loading quiz and spinner
@@ -28,18 +30,34 @@ const ObstacleCourse = () => {
   const [interruptionAttempts, setInterruptionAttempts] =
     useState(0);
   const [videoStarted, setVideoStarted] = useState(false);
-  const [videoCurrentTime, setVideoCurrentTime] =
-    useState(0);
+  const [videoTime, setVideoTime] = useState(0);
+
+  // State for control manipulation
+  const [manipulatedControls, setManipulatedControls] =
+    useState(false);
+  const [controlsFlipped, setControlsFlipped] =
+    useState(false);
+  const [videoFlipped, setVideoFlipped] = useState(false);
+
+  // State for play button obstacle
+  const [
+    showPlayButtonObstacle,
+    setShowPlayButtonObstacle
+  ] = useState(false);
+  const [
+    playButtonWrongAttempts,
+    setPlayButtonWrongAttempts
+  ] = useState(0);
+  const [videoPausedManually, setVideoPausedManually] =
+    useState(false);
 
   // Video player state
-  const [isPlaying, setIsPlaying] = useState(false);
   const [playbackId] = useState(
     "nxzPZLvW02bQ4r4kSfeQwsYq6OwSx4tiH5f4IC1Uof01A"
   );
 
   const containerRef = useRef(null);
   const playerRef = useRef(null);
-  const timeUpdateRef = useRef(null);
 
   // Handle loading quiz submission
   const handleQuizSubmit = (e) => {
@@ -97,7 +115,6 @@ const ObstacleCourse = () => {
             .catch((e) =>
               console.log("Auto-play failed:", e)
             );
-          setIsPlaying(true);
           setVideoStarted(true);
         }
       } else {
@@ -131,7 +148,12 @@ const ObstacleCourse = () => {
           playerRef.current
             .play()
             .catch((e) => console.log("Resume failed:", e));
-          setIsPlaying(true);
+
+          // After they've gone through all these obstacles, start messing with controls
+          // Schedule control manipulation to happen 5 seconds after video resumes
+          setTimeout(() => {
+            manipulateControls();
+          }, 5000);
         }
       } else {
         // Show another message
@@ -152,76 +174,230 @@ const ObstacleCourse = () => {
           playerRef.current
             .play()
             .catch((e) => console.log("Resume failed:", e));
-          setIsPlaying(true);
+
+          // Schedule control manipulation
+          setTimeout(() => {
+            manipulateControls();
+          }, 5000);
         }
       }, 1500);
     }
   };
 
-  // Set up video time tracking to trigger interruption
-  useEffect(() => {
-    if (videoStarted && isPlaying && !showInterruption) {
-      // Clear any existing interval
-      if (timeUpdateRef.current) {
-        clearInterval(timeUpdateRef.current);
-      }
+  // Handlers for play button obstacle
+  const handleCorrectPlayButtonClick = () => {
+    setShowPlayButtonObstacle(false);
 
-      // Set up new interval to check video time
-      timeUpdateRef.current = setInterval(() => {
-        if (playerRef.current) {
-          const currentTime =
-            playerRef.current.currentTime || 0;
-          setVideoCurrentTime(currentTime);
-
-          // If video has played for 3 seconds and interruption hasn't been shown
-          if (
-            currentTime >= 3 &&
-            !showInterruption &&
-            interruptionAttempts === 0
-          ) {
-            // Pause the video
-            playerRef.current.pause();
-            setIsPlaying(false);
-
-            // Show interruption overlay
-            setShowInterruption(true);
-
-            // Clear the interval
-            clearInterval(timeUpdateRef.current);
-          }
-        }
-      }, 100);
-
-      return () => {
-        if (timeUpdateRef.current) {
-          clearInterval(timeUpdateRef.current);
-        }
-      };
+    // Resume playback
+    if (playerRef.current) {
+      playerRef.current
+        .play()
+        .catch((e) => console.log("Resume failed:", e));
     }
-  }, [videoStarted, isPlaying, showInterruption]);
+
+    // Reset for next time
+    setPlayButtonWrongAttempts(0);
+    setVideoPausedManually(false);
+  };
+
+  const handleWrongPlayButtonClick = (attempts) => {
+    setPlayButtonWrongAttempts((prev) => prev + 1);
+
+    // After several wrong attempts, make it even more annoying
+    if (attempts > 5) {
+      // Resize a random number of buttons to be extremely small
+      const buttons =
+        document.querySelectorAll(".play-button");
+      buttons.forEach((button) => {
+        if (Math.random() > 0.7) {
+          button.style.transform = "scale(0.2)";
+        }
+      });
+
+      // Add a taunting message
+      alert(
+        "Having trouble finding the right button? Keep trying!"
+      );
+    }
+  };
+
+  // Manipulate the Mux player controls
+  const manipulateControls = () => {
+    setManipulatedControls(true);
+
+    // 1. Flip the controls horizontally
+    setControlsFlipped(true);
+
+    // Find and manipulate the Mux player controls directly
+    const manipulateControlBar = () => {
+      // Get mux-player element and its shadow DOM elements
+      const muxPlayer = playerRef.current;
+
+      if (muxPlayer) {
+        try {
+          // Try to access the control bar via shadow DOM
+          const controlBar = document
+            .querySelector("mux-player")
+            ?.shadowRoot?.querySelector(
+              "media-control-bar"
+            );
+
+          if (controlBar) {
+            // Flip controls horizontally
+            controlBar.style.flexDirection = "row-reverse";
+
+            // Make other random modifications
+            const buttons =
+              controlBar.querySelectorAll("button");
+            if (buttons.length) {
+              // Make buttons do random things
+              buttons.forEach((button) => {
+                // Random chance to rotate them
+                if (Math.random() > 0.5) {
+                  button.style.transform = `rotate(${Math.floor(
+                    Math.random() * 360
+                  )}deg)`;
+                }
+
+                // Add wonky hover effect
+                button.addEventListener(
+                  "mouseenter",
+                  (e) => {
+                    const randomX = Math.random() * 20 - 10;
+                    const randomY = Math.random() * 20 - 10;
+                    e.target.style.transform = `translate(${randomX}px, ${randomY}px)`;
+                  }
+                );
+
+                button.addEventListener(
+                  "mouseleave",
+                  (e) => {
+                    e.target.style.transform = "";
+                  }
+                );
+              });
+            }
+
+            // Add more bizarre behavior
+            setTimeout(() => {
+              // Flip the video (not just controls)
+              setVideoFlipped(true);
+
+              setTimeout(() => {
+                // Unflip after 3 seconds
+                setVideoFlipped(false);
+              }, 3000);
+            }, 3000);
+          }
+        } catch (error) {
+          console.log(
+            "Error manipulating controls:",
+            error
+          );
+        }
+      }
+    };
+
+    // Try to manipulate controls - may need to retry if shadow DOM isn't ready
+    manipulateControlBar();
+
+    // Set a backup to try again
+    setTimeout(manipulateControlBar, 500);
+  };
+
+  // Set up time update handler to track video time and trigger interruption
+  const handleTimeUpdate = () => {
+    if (playerRef.current) {
+      const time = playerRef.current.currentTime;
+      setVideoTime(time);
+
+      // If video has played for 3 seconds and interruption hasn't been shown
+      if (
+        time >= 3 &&
+        !showInterruption &&
+        videoStarted &&
+        interruptionAttempts === 0
+      ) {
+        console.log(
+          "Triggering interruption at time:",
+          time
+        );
+
+        // Pause the video
+        playerRef.current.pause();
+
+        // Show interruption overlay
+        setShowInterruption(true);
+      }
+    }
+  };
+
+  // Handle video pause/play events
+  const handlePause = () => {
+    // Only show play button obstacle if video has started and we're past the initial interruptions
+    if (
+      videoStarted &&
+      !showInterruption &&
+      !showConfirmation &&
+      !showLoadingQuiz
+    ) {
+      console.log("Video paused manually");
+      setVideoPausedManually(true);
+
+      // Small delay to ensure it wasn't a system pause
+      setTimeout(() => {
+        if (playerRef.current && playerRef.current.paused) {
+          setShowPlayButtonObstacle(true);
+        }
+      }, 300);
+    }
+  };
+
+  const handlePlay = () => {
+    setShowPlayButtonObstacle(false);
+    setVideoPausedManually(false);
+  };
 
   return (
     <div className="player-container" ref={containerRef}>
       {/* Mux Player React Component */}
-      <MuxPlayer
-        ref={playerRef}
-        playbackId={playbackId}
-        metadataVideoTitle="Placeholder (optional)"
-        metadata={{
-          viewer_user_id: "Placeholder (optional)"
-        }}
-        primaryColor="#ffffff"
-        secondaryColor="#000000"
-        accentColor="#fa50b5"
-        streamType="on-demand"
-        controls={
-          !showLoadingQuiz &&
-          !showConfirmation &&
-          !showInterruption
-        }
-        onPlay={() => setIsPlaying(true)}
-        onPause={() => setIsPlaying(false)}
-      />
+      <div
+        className={`mux-player-wrapper ${
+          controlsFlipped ? "controls-flipped" : ""
+        } ${videoFlipped ? "video-flipped" : ""}`}
+      >
+        <MuxPlayer
+          ref={playerRef}
+          playbackId={playbackId}
+          metadataVideoTitle="Placeholder (optional)"
+          metadata={{
+            viewer_user_id: "Placeholder (optional)"
+          }}
+          primaryColor="#ffffff"
+          secondaryColor="#000000"
+          accentColor="#fa50b5"
+          streamType="on-demand"
+          controls={
+            !showLoadingQuiz &&
+            !showConfirmation &&
+            !showInterruption &&
+            !showPlayButtonObstacle
+          }
+          onTimeUpdate={handleTimeUpdate}
+          onPlay={() => {
+            console.log("Video played!");
+            if (
+              !videoStarted &&
+              !showLoadingQuiz &&
+              !showConfirmation
+            ) {
+              setVideoStarted(true);
+            }
+            handlePlay();
+          }}
+          onPause={handlePause}
+        />
+      </div>
 
       {/* Loading Quiz Overlay */}
       {showLoadingQuiz && (
@@ -387,9 +563,16 @@ const ObstacleCourse = () => {
         </div>
       )}
 
-      {/* Optional time display for debugging */}
+      {/* Play Button Obstacle */}
+      <PlayButtonObstacle
+        isVisible={showPlayButtonObstacle}
+        onCorrectButtonClick={handleCorrectPlayButtonClick}
+        onWrongButtonClick={handleWrongPlayButtonClick}
+      />
+
+      {/* Optional debug time display */}
       {/* <div className="time-display">
-        Current time: {videoCurrentTime.toFixed(1)}s
+        Video time: {videoTime.toFixed(1)}s | Started: {videoStarted ? "Yes" : "No"}
       </div> */}
     </div>
   );
