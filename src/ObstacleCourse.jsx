@@ -69,7 +69,6 @@ const ObstacleCourse = () => {
 
   return (
     <div className="player-container" ref={containerRef}>
-      {/* Media Chrome Player */}
       <media-controller>
         <video
           ref={videoRef}
@@ -81,7 +80,6 @@ const ObstacleCourse = () => {
           playsinline
         ></video>
 
-        {/* Default Media Chrome controls */}
         <media-control-bar>
           <media-play-button></media-play-button>
           <media-time-display></media-time-display>
@@ -92,7 +90,6 @@ const ObstacleCourse = () => {
         </media-control-bar>
       </media-controller>
 
-      {/* Quiz Overlay */}
       {showLoadingQuiz && (
         <div className="overlay">
           {!quizSubmitted ? (
@@ -134,7 +131,6 @@ const ObstacleCourse = () => {
                 }
                 className="skip-button"
                 onMouseEnter={(e) => {
-                  // Button runs away when hovered
                   e.target.style.transform = `translateX(${
                     Math.random() > 0.5 ? 100 : -100
                   }px)`;
