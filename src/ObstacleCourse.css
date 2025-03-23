@@ -1,0 +1,130 @@
+/* Base container for the player */
+.player-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  /* Make the Mux player fill the container */
+  .player-container mux-player {
+    width: 100%;
+    height: 100%;
+  }
+  
+  /* Overlay that sits on top of the video */
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+  
+  /* Quiz form styling */
+  .quiz-form {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+  }
+  
+  .quiz-form h2 {
+    margin-bottom: 20px;
+    color: #FF7A00;
+  }
+  
+  .quiz-form input {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 2px solid #FFD166;
+    border-radius: 5px;
+    font-size: 16px;
+  }
+  
+  .quiz-form button, 
+  .skip-button {
+    background: #FF7A00;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  
+  .quiz-form button:hover,
+  .skip-button:hover {
+    background: #FFA94D;
+  }
+  
+  /* Loading screen */
+  .loading-screen {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .progress-container {
+    width: 100%;
+    height: 20px;
+    background: #eee;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #FF7A00, #FFD166);
+    transition: width 0.5s;
+  }
+  
+  .loading-screen p {
+    margin-bottom: 20px;
+    font-weight: bold;
+    color: #FF7A00;
+    font-size: 18px;
+  }
+  
+  /* Image spinner */
+  .spinner {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin: 20px 0;
+    object-fit: cover;
+    animation: spin 8s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .skip-button {
+    margin-top: 10px;
+    background: #888;
+  }
+  
+  .skip-button:hover {
+    background: #666;
+  }
