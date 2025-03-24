@@ -1,13 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import MuxPlayer from "@mux/mux-player-react";
 import "./ObstacleCourse.css";
+// TODO: Import Real Gif
 import sunsetImageUrl from "./assets/sunset.jpg";
-// Import the wagging finger GIF/video
-// Replace this path with the actual path to your GIF/video
+// TODO: Import Real Gif
 import waggingFingerGif from "./assets/wagging-finger.gif";
 
 const ObstacleCourse = () => {
-  // State for loading quiz and spinner
   const [isLoading, setIsLoading] = useState(true);
   const [showLoadingQuiz, setShowLoadingQuiz] =
     useState(true);
@@ -16,13 +15,10 @@ const ObstacleCourse = () => {
   const [loadingTime, setLoadingTime] = useState(0);
   const [quizSubmitted, setQuizSubmitted] = useState(false);
 
-  // State for confirmation overlays
   const [showConfirmation, setShowConfirmation] =
     useState(false);
   const [confirmationAttempts, setConfirmationAttempts] =
     useState(0);
-
-  // State for video interruption
   const [showInterruption, setShowInterruption] =
     useState(false);
   const [interruptionAttempts, setInterruptionAttempts] =
@@ -31,8 +27,9 @@ const ObstacleCourse = () => {
   const [videoCurrentTime, setVideoCurrentTime] =
     useState(0);
 
-  // Video player state
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // TODO: Upload real video
   const [playbackId] = useState(
     "nxzPZLvW02bQ4r4kSfeQwsYq6OwSx4tiH5f4IC1Uof01A"
   );
@@ -41,7 +38,6 @@ const ObstacleCourse = () => {
   const playerRef = useRef(null);
   const timeUpdateRef = useRef(null);
 
-  // Handle loading quiz submission
   const handleQuizSubmit = (e) => {
     e.preventDefault();
 
@@ -54,7 +50,6 @@ const ObstacleCourse = () => {
       return;
     }
 
-    // Convert to number and cap at 60 seconds
     const loadTime = Math.min(
       Math.floor(Number(favoriteNumber)),
       60
@@ -62,7 +57,6 @@ const ObstacleCourse = () => {
     setLoadingTime(loadTime);
     setQuizSubmitted(true);
 
-    // Start the loading progress
     let progress = 0;
     const interval = setInterval(() => {
       progress += 100 / loadTime;
@@ -71,8 +65,6 @@ const ObstacleCourse = () => {
         clearInterval(interval);
         setIsLoading(false);
         setShowLoadingQuiz(false);
-
-        // Show confirmation instead of playing video immediately
         setShowConfirmation(true);
       }
 
@@ -80,17 +72,14 @@ const ObstacleCourse = () => {
     }, 1000);
   };
 
-  // Handle confirmation dialog
   const handleConfirmation = (confirmed) => {
     if (confirmed) {
-      // If they're "sure", increase attempt count and make it harder
       setConfirmationAttempts((prev) => prev + 1);
 
       // Only allow after 3 attempts
       if (confirmationAttempts >= 2) {
         setShowConfirmation(false);
 
-        // Play the video
         if (playerRef.current) {
           playerRef.current
             .play()
@@ -101,32 +90,24 @@ const ObstacleCourse = () => {
           setVideoStarted(true);
         }
       } else {
-        // Show them a different message for each attempt
+        // TODO: Update?
         const messages = [
-          "Are you REALLY sure? This video might change your life...",
+          "Before you can be sure, make sure you're sure.",
           "This is your LAST chance. Are you ABSOLUTELY certain?"
         ];
         alert(messages[confirmationAttempts]);
       }
     } else {
-      // If they say no, guilt trip them
-      alert(
-        "Oh come on! You've waited this long already. Try again."
-      );
+      alert("Be more fun! Embrace the process.");
     }
   };
 
-  // Handle interruption dialog
   const handleInterruption = (continue_) => {
     if (continue_) {
-      // If they choose to continue, increase attempt count
       setInterruptionAttempts((prev) => prev + 1);
-
-      // Only allow after 2 attempts
       if (interruptionAttempts >= 1) {
         setShowInterruption(false);
 
-        // Resume the video
         if (playerRef.current) {
           playerRef.current
             .play()
@@ -134,19 +115,13 @@ const ObstacleCourse = () => {
           setIsPlaying(true);
         }
       } else {
-        // Show another message
-        alert(
-          "Are you absolutely certain? This video contains... content."
-        );
+        alert("Be sure.");
       }
     } else {
-      // If they say no, express relief
       alert(
         "Good choice! But we're going to play it anyway..."
       );
       setShowInterruption(false);
-
-      // Resume the video after a short delay
       setTimeout(() => {
         if (playerRef.current) {
           playerRef.current
@@ -158,35 +133,27 @@ const ObstacleCourse = () => {
     }
   };
 
-  // Set up video time tracking to trigger interruption
   useEffect(() => {
     if (videoStarted && isPlaying && !showInterruption) {
-      // Clear any existing interval
       if (timeUpdateRef.current) {
         clearInterval(timeUpdateRef.current);
       }
 
-      // Set up new interval to check video time
       timeUpdateRef.current = setInterval(() => {
         if (playerRef.current) {
           const currentTime =
             playerRef.current.currentTime || 0;
           setVideoCurrentTime(currentTime);
 
-          // If video has played for 3 seconds and interruption hasn't been shown
           if (
             currentTime >= 3 &&
             !showInterruption &&
             interruptionAttempts === 0
           ) {
-            // Pause the video
             playerRef.current.pause();
             setIsPlaying(false);
 
-            // Show interruption overlay
             setShowInterruption(true);
-
-            // Clear the interval
             clearInterval(timeUpdateRef.current);
           }
         }
@@ -202,7 +169,6 @@ const ObstacleCourse = () => {
 
   return (
     <div className="player-container" ref={containerRef}>
-      {/* Mux Player React Component */}
       <MuxPlayer
         ref={playerRef}
         playbackId={playbackId}
@@ -223,7 +189,6 @@ const ObstacleCourse = () => {
         onPause={() => setIsPlaying(false)}
       />
 
-      {/* Loading Quiz Overlay */}
       {showLoadingQuiz && (
         <div className="overlay">
           {!quizSubmitted ? (
@@ -250,6 +215,10 @@ const ObstacleCourse = () => {
                   className="progress-bar"
                   style={{ width: `${loadingProgress}%` }}
                 ></div>
+                <p>
+                  Great! Then you will love to wait{" "}
+                  {favoriteNumber} seconds.
+                </p>
               </div>
               <p>{Math.floor(loadingProgress)}%</p>
               <img
@@ -258,11 +227,7 @@ const ObstacleCourse = () => {
                 className="spinner"
               />
               <button
-                onClick={() =>
-                  alert(
-                    "Nice try! But we need more time..."
-                  )
-                }
+                onClick={() => alert("Not yet. Relax.")}
                 className="skip-button"
                 onMouseEnter={(e) => {
                   e.target.style.transform = `translateX(${
@@ -281,7 +246,6 @@ const ObstacleCourse = () => {
         </div>
       )}
 
-      {/* Initial Confirmation Overlay */}
       {showConfirmation && (
         <div className="overlay">
           <div className="confirmation-dialog">
@@ -296,8 +260,7 @@ const ObstacleCourse = () => {
             </div>
 
             <p>
-              Your friend doesn't think this is a good
-              idea...
+              We want to make sure you want to watch this.
             </p>
 
             <div className="confirmation-buttons">
@@ -305,7 +268,6 @@ const ObstacleCourse = () => {
                 onClick={() => handleConfirmation(true)}
                 className="yes-button"
                 onMouseEnter={(e) => {
-                  // Button runs away when hovered, but only sometimes to be extra annoying
                   if (Math.random() > 0.3) {
                     const xOffset =
                       Math.random() > 0.5 ? 100 : -100;
@@ -332,12 +294,9 @@ const ObstacleCourse = () => {
         </div>
       )}
 
-      {/* Video Interruption Overlay after 3 seconds */}
       {showInterruption && (
         <div className="overlay interruption-overlay">
           <div className="interruption-dialog">
-            <h2>WAIT! STOP THE VIDEO!</h2>
-
             <div className="wagging-finger-container shaking">
               <img
                 src={waggingFingerGif}
@@ -345,14 +304,8 @@ const ObstacleCourse = () => {
                 className="wagging-finger"
               />
             </div>
-
-            <p>
-              Your friend REALLY thinks you shouldn't watch
-              this.
-            </p>
             <p className="warning-text">
-              Are you absolutely certain you want to
-              continue?
+              Have you considered using our AI Assistant?
             </p>
 
             <div className="confirmation-buttons">
@@ -360,7 +313,6 @@ const ObstacleCourse = () => {
                 onClick={() => handleInterruption(true)}
                 className="yes-button"
                 onMouseEnter={(e) => {
-                  // Button runs away when hovered, but make it even harder
                   if (Math.random() > 0.2) {
                     const xOffset =
                       Math.random() > 0.5 ? 150 : -150;
@@ -374,7 +326,7 @@ const ObstacleCourse = () => {
                   }
                 }}
               >
-                Continue Anyway
+                Yes
               </button>
               <button
                 onClick={() => handleInterruption(false)}
@@ -386,11 +338,6 @@ const ObstacleCourse = () => {
           </div>
         </div>
       )}
-
-      {/* Optional time display for debugging */}
-      {/* <div className="time-display">
-        Current time: {videoCurrentTime.toFixed(1)}s
-      </div> */}
     </div>
   );
 };
