@@ -30,7 +30,12 @@ const ObstacleCourse = () => {
   const playerRef = useRef(null);
   const timeUpdateRef = useRef(null);
 
-  const getVideoElement = () => playerRef.current;
+  // Function to get the video element from the Player component
+  const getVideoElement = () => {
+    // The actual video element is likely inside the Player component
+    // Let's find it by querying for the video tag
+    return document.querySelector("video");
+  };
 
   const handleQuizSubmit = (e) => {
     e.preventDefault();
@@ -91,6 +96,7 @@ const ObstacleCourse = () => {
   };
 
   const handleInterruption = (continue_) => {
+    setInterruptionAttempts((prev) => prev + 1);
     setShowInterruption(false);
     const videoEl = getVideoElement();
 
@@ -114,25 +120,29 @@ const ObstacleCourse = () => {
     }
   };
 
+  // Set up time monitoring for video interruptions
   useEffect(() => {
     if (videoStarted && isPlaying && !showInterruption) {
       if (timeUpdateRef.current) {
         clearInterval(timeUpdateRef.current);
       }
+
       timeUpdateRef.current = setInterval(() => {
         const videoEl = getVideoElement();
         if (videoEl) {
           const currentTime = videoEl.currentTime || 0;
           setVideoCurrentTime(currentTime);
+
+          // First interruption at 3 seconds
           if (
             currentTime >= 3 &&
+            currentTime < 4 &&
             !showInterruption &&
             interruptionAttempts === 0
           ) {
             videoEl.pause();
             setIsPlaying(false);
             setShowInterruption(true);
-            clearInterval(timeUpdateRef.current);
           }
         }
       }, 100);
@@ -154,6 +164,7 @@ const ObstacleCourse = () => {
     <MediaProvider>
       <div className="player-container">
         <Player />
+
         {showLoadingQuiz && (
           <div className="overlay">
             {!quizSubmitted ? (
@@ -248,6 +259,30 @@ const ObstacleCourse = () => {
                   className="no-button"
                 >
                   No, take me back
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {showInterruption && (
+          <div className="overlay">
+            <div className="interruption-dialog">
+              <h2>Wait! Hold on!</h2>
+              <p>
+                Do you really want to continue watching this
+                video?
+              </p>
+              <div className="interruption-buttons">
+                <button
+                  onClick={() => handleInterruption(true)}
+                >
+                  Yes, continue
+                </button>
+                <button
+                  onClick={() => handleInterruption(false)}
+                >
+                  No, stop playing
                 </button>
               </div>
             </div>
