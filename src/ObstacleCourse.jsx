@@ -27,6 +27,13 @@ const ObstacleCourse = () => {
   const [videoCurrentTime, setVideoCurrentTime] =
     useState(0);
 
+  // Theme selection state
+  const [showThemeSelection, setShowThemeSelection] =
+    useState(false);
+  const [selectedTheme, setSelectedTheme] = useState(null);
+  const [themeEffectActive, setThemeEffectActive] =
+    useState(false);
+
   const [isPlaying, setIsPlaying] = useState(false);
 
   // TODO: Upload real video
@@ -37,6 +44,7 @@ const ObstacleCourse = () => {
   const containerRef = useRef(null);
   const playerRef = useRef(null);
   const timeUpdateRef = useRef(null);
+  const themeEffectTimerRef = useRef(null);
 
   const handleQuizSubmit = (e) => {
     e.preventDefault();
@@ -90,7 +98,6 @@ const ObstacleCourse = () => {
           setVideoStarted(true);
         }
       } else {
-        // TODO: Update?
         const messages = [
           "Before you can be sure, make sure you're sure.",
           "This is your LAST chance. Are you ABSOLUTELY certain?"
@@ -133,8 +140,54 @@ const ObstacleCourse = () => {
     }
   };
 
+  // Handler for theme selection
+  const handleThemeSelection = (theme) => {
+    setSelectedTheme(theme);
+    setShowThemeSelection(false);
+
+    if (playerRef.current) {
+      playerRef.current
+        .play()
+        .catch((e) => console.log("Resume failed:", e));
+      setIsPlaying(true);
+    }
+
+    // Schedule random theme effects to appear
+    scheduleThemeEffects();
+  };
+
+  // Schedule random theme effect appearances
+  const scheduleThemeEffects = () => {
+    const scheduleNextEffect = () => {
+      const delay = Math.floor(Math.random() * 8000) + 3000; // Random delay between 3-11 seconds
+
+      themeEffectTimerRef.current = setTimeout(() => {
+        // Activate effect
+        setThemeEffectActive(true);
+
+        // Deactivate after a random duration
+        const duration =
+          Math.floor(Math.random() * 3000) + 2000; // 2-5 seconds
+        setTimeout(() => {
+          setThemeEffectActive(false);
+
+          // Schedule next effect
+          scheduleNextEffect();
+        }, duration);
+      }, delay);
+    };
+
+    // Start the chain
+    scheduleNextEffect();
+  };
+
   useEffect(() => {
-    if (videoStarted && isPlaying && !showInterruption) {
+    if (
+      videoStarted &&
+      isPlaying &&
+      !showInterruption &&
+      !showThemeSelection
+    ) {
       if (timeUpdateRef.current) {
         clearInterval(timeUpdateRef.current);
       }
@@ -145,6 +198,7 @@ const ObstacleCourse = () => {
             playerRef.current.currentTime || 0;
           setVideoCurrentTime(currentTime);
 
+          // First interruption - AI Assistant
           if (
             currentTime >= 3 &&
             !showInterruption &&
@@ -152,8 +206,20 @@ const ObstacleCourse = () => {
           ) {
             playerRef.current.pause();
             setIsPlaying(false);
-
             setShowInterruption(true);
+            clearInterval(timeUpdateRef.current);
+          }
+
+          // Second interruption - Theme Selection
+          if (
+            currentTime >= 8 && // Show at 8 seconds
+            !showThemeSelection &&
+            interruptionAttempts > 0 && // Only after AI assistant
+            !selectedTheme // Only if they haven't selected yet
+          ) {
+            playerRef.current.pause();
+            setIsPlaying(false);
+            setShowThemeSelection(true);
             clearInterval(timeUpdateRef.current);
           }
         }
@@ -165,7 +231,23 @@ const ObstacleCourse = () => {
         }
       };
     }
-  }, [videoStarted, isPlaying, showInterruption]);
+  }, [
+    videoStarted,
+    isPlaying,
+    showInterruption,
+    showThemeSelection,
+    interruptionAttempts,
+    selectedTheme
+  ]);
+
+  // Cleanup theme effect timers on unmount
+  useEffect(() => {
+    return () => {
+      if (themeEffectTimerRef.current) {
+        clearTimeout(themeEffectTimerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="player-container" ref={containerRef}>
@@ -183,11 +265,59 @@ const ObstacleCourse = () => {
         controls={
           !showLoadingQuiz &&
           !showConfirmation &&
-          !showInterruption
+          !showInterruption &&
+          !showThemeSelection
         }
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
       ></MuxPlayer>
+
+      {/* Theme effect overlays */}
+      {selectedTheme && themeEffectActive && (
+        <div className={`theme-effect ${selectedTheme}`}>
+          {selectedTheme === "hot-lava" && (
+            <div className="lava-flow"></div>
+          )}
+          {selectedTheme === "rock-slide" && (
+            <div className="falling-rocks">
+              {[...Array(6)].map((_, i) => (
+                <div
+                  key={i}
+                  className="rock"
+                  style={{
+                    left: `${Math.random() * 90}%`,
+                    animationDuration: `${
+                      Math.random() * 2 + 1
+                    }s`,
+                    animationDelay: `${
+                      Math.random() * 0.5
+                    }s`
+                  }}
+                ></div>
+              ))}
+            </div>
+          )}
+          {selectedTheme === "slime" && (
+            <div className="slime-drip">
+              {[...Array(8)].map((_, i) => (
+                <div
+                  key={i}
+                  className="slime-drop"
+                  style={{
+                    left: `${Math.random() * 90}%`,
+                    animationDuration: `${
+                      Math.random() * 3 + 2
+                    }s`,
+                    animationDelay: `${
+                      Math.random() * 0.8
+                    }s`
+                  }}
+                ></div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {showLoadingQuiz && (
         <div className="overlay">
@@ -334,6 +464,54 @@ const ObstacleCourse = () => {
               >
                 Stop Video
               </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Theme Selection Overlay */}
+      {showThemeSelection && (
+        <div className="overlay theme-selection-overlay">
+          <div className="theme-selection-dialog">
+            <h2>Choose Your Obstacle Course Theme</h2>
+            <p>Pick your challenge. No going back!</p>
+
+            <div className="theme-options">
+              <div
+                className="theme-option hot-lava"
+                onClick={() =>
+                  handleThemeSelection("hot-lava")
+                }
+              >
+                <div className="theme-preview lava-preview"></div>
+                <h3>HOT LAVA</h3>
+                <p>Watch out for unexpected eruptions!</p>
+              </div>
+
+              <div
+                className="theme-option rock-slide"
+                onClick={() =>
+                  handleThemeSelection("rock-slide")
+                }
+              >
+                <div className="theme-preview rock-preview"></div>
+                <h3>ROCK SLIDE</h3>
+                <p>Boulders may block your view!</p>
+              </div>
+
+              <div
+                className="theme-option slime"
+                onClick={() =>
+                  handleThemeSelection("slime")
+                }
+              >
+                <div className="theme-preview slime-preview"></div>
+                <h3>SLIME</h3>
+                <p>
+                  It's sticky, gooey, and hard to see
+                  through!
+                </p>
+              </div>
             </div>
           </div>
         </div>
