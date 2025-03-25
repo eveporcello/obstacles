@@ -6,16 +6,12 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        <h1>Large Obstacles</h1>
+        <h1>Legends of the Hidden MUX Player</h1>
       </header>
 
       <div className="player-wrapper">
         <ObstacleCourse />
       </div>
-
-      <footer>
-        <p>{new Date().getFullYear()}</p>
-      </footer>
     </div>
   );
 }

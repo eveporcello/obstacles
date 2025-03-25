@@ -69,26 +69,6 @@ const MuteButton = () => {
   );
 };
 
-const PipButton = () => {
-  const dispatch = useMediaDispatch();
-  const mediaIsPip = useMediaSelector(
-    (state) => state.mediaIsPip
-  );
-  return (
-    <button
-      style={{ cursor: "pointer" }}
-      onClick={() => {
-        const type = mediaIsPip
-          ? MediaActionTypes.MEDIA_EXIT_PIP_REQUEST
-          : MediaActionTypes.MEDIA_ENTER_PIP_REQUEST;
-        dispatch({ type });
-      }}
-    >
-      {!mediaIsPip ? "Enter Pip" : "Exit Pip"}
-    </button>
-  );
-};
-
 const FullscreenButton = () => {
   const dispatch = useMediaDispatch();
   const mediaIsFullscreen = useMediaSelector(
@@ -248,7 +228,6 @@ const Player = ({ src }) => {
               }}
             >
               <PlaybackRateButton />
-              <PipButton />
               <FullscreenButton />
             </div>
           </div>

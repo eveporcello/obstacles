@@ -109,13 +109,14 @@
 
 /* Spinner styling */
 .spinner {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  /* border-radius: 20%; */
   margin: 20px 0;
-  object-fit: cover;
-  animation: spin 8s linear infinite;
+  object-fit:contain;
+  animation: spin 6s linear infinite;
 }
+
 
 @keyframes spin {
   0% { transform: rotate(0deg); }
