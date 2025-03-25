@@ -149,7 +149,7 @@ const ObstacleCourse = () => {
     videoStarted,
     isPlaying,
     showInterruption,
-    interruptionAttempts
+    interruptionAttempts  
   ]);
 
   return (
