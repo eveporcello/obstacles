@@ -30,10 +30,7 @@ const ObstacleCourse = () => {
   const playerRef = useRef(null);
   const timeUpdateRef = useRef(null);
 
-  // Function to get the video element from the Player component
   const getVideoElement = () => {
-    // The actual video element is likely inside the Player component
-    // Let's find it by querying for the video tag
     return document.querySelector("video");
   };
 
