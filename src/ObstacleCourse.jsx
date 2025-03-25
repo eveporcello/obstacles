@@ -253,50 +253,6 @@ const ObstacleCourse = () => {
             </div>
           </div>
         )}
-
-        {showInterruption && (
-          <div className="overlay interruption-overlay">
-            <div className="interruption-dialog">
-              <div className="wagging-finger-container shaking">
-                <img
-                  src={waggingFingerGif}
-                  alt="No no no!"
-                  className="wagging-finger"
-                />
-              </div>
-              <p className="warning-text">
-                Have you considered using our AI Assistant?
-              </p>
-              <div className="confirmation-buttons">
-                <button
-                  onClick={() => handleInterruption(true)}
-                  className="yes-button"
-                  onMouseEnter={(e) => {
-                    if (Math.random() > 0.2) {
-                      const xOffset =
-                        Math.random() > 0.5 ? 150 : -150;
-                      const yOffset =
-                        Math.random() > 0.5 ? -70 : 30;
-                      e.target.style.transform = `translate(${xOffset}px, ${yOffset}px)`;
-                      setTimeout(() => {
-                        e.target.style.transform =
-                          "translateX(0)";
-                      }, 1000);
-                    }
-                  }}
-                >
-                  Yes
-                </button>
-                <button
-                  onClick={() => handleInterruption(false)}
-                  className="no-button"
-                >
-                  Stop Video
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </MediaProvider>
   );
