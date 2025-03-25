@@ -17,6 +17,7 @@ const PlayButton = () => {
   return (
     <button
       style={{ cursor: "pointer" }}
+      className="console-button"
       onClick={() => {
         const type = mediaPaused
           ? MediaActionTypes.MEDIA_PLAY_REQUEST
@@ -37,6 +38,7 @@ const PlaybackRateButton = () => {
   return (
     <button
       style={{ cursor: "pointer" }}
+      className="console-button"
       onClick={() => {
         const type =
           MediaActionTypes.MEDIA_PLAYBACK_RATE_REQUEST;
@@ -57,6 +59,7 @@ const MuteButton = () => {
   return (
     <button
       style={{ cursor: "pointer" }}
+      className="console-button"
       onClick={() => {
         const type = mediaPseudoMuted
           ? MediaActionTypes.MEDIA_UNMUTE_REQUEST
@@ -77,6 +80,7 @@ const FullscreenButton = () => {
   return (
     <button
       style={{ cursor: "pointer" }}
+      className="console-button"
       onClick={() => {
         const type = mediaIsFullscreen
           ? MediaActionTypes.MEDIA_EXIT_FULLSCREEN_REQUEST
@@ -185,7 +189,7 @@ const Player = ({ src }) => {
             bottom: 0,
             left: 0,
             width: "100%",
-            background: "rgba(200, 0, 0, 0.7)"
+            background: "rgba(235, 255, 79, 0.7)"
           }}
         >
           <div
