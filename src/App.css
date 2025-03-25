@@ -9,6 +9,7 @@ body {
   background-color: #f5f5f5;
   color: #333;
   line-height: 1.6;
+  margin-top: 80px;
 }
 
 .app-container {
@@ -83,4 +84,8 @@ footer {
 
 .console-button:hover {
   background-color: black;
+}
+
+.move-it:hover {
+  animation: move 10s ease-in-out infinite;
 }
