@@ -161,10 +161,9 @@
   color: #333;
 }
 
-/* Wagging finger container */
 .wagging-finger-container {
   width: 200px;
-  height: 200px;
+  height: 225px;
   margin: 10px auto;
   display: flex;
   justify-content: center;

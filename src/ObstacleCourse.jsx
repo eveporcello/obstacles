@@ -26,9 +26,6 @@ const ObstacleCourse = () => {
   const [videoCurrentTime, setVideoCurrentTime] =
     useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
-  const [playbackId] = useState(
-    "nxzPZLvW02bQ4r4kSfeQwsYq6OwSx4tiH5f4IC1Uof01A"
-  );
 
   const playerRef = useRef(null);
   const timeUpdateRef = useRef(null);
@@ -51,18 +48,8 @@ const ObstacleCourse = () => {
     );
     setLoadingTime(loadTime);
     setQuizSubmitted(true);
-
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += 100 / loadTime;
-      if (progress >= 100) {
-        clearInterval(interval);
-        setIsLoading(false);
-        setShowLoadingQuiz(false);
-        setShowConfirmation(true);
-      }
-      setLoadingProgress(Math.min(progress, 100));
-    }, 1000);
+    // Show confirmation dialog immediately after quiz is submitted
+    setShowConfirmation(true);
   };
 
   const handleConfirmation = (confirmed) => {
@@ -70,16 +57,27 @@ const ObstacleCourse = () => {
       setConfirmationAttempts((prev) => prev + 1);
       if (confirmationAttempts >= 2) {
         setShowConfirmation(false);
-        const videoEl = getVideoElement();
-        if (videoEl) {
-          videoEl
-            .play()
-            .catch((e) =>
-              console.log("Auto-play failed:", e)
-            );
-          setIsPlaying(true);
-          setVideoStarted(true);
-        }
+        // Start loading progress after confirmation
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += 100 / loadingTime;
+          if (progress >= 100) {
+            clearInterval(interval);
+            setIsLoading(false);
+            setShowLoadingQuiz(false);
+            const videoEl = getVideoElement();
+            if (videoEl) {
+              videoEl
+                .play()
+                .catch((e) =>
+                  console.log("Auto-play failed:", e)
+                );
+              setIsPlaying(true);
+              setVideoStarted(true);
+            }
+          }
+          setLoadingProgress(Math.min(progress, 100));
+        }, 1000);
       } else {
         const messages = [
           "Before you can be sure, make sure you're sure.",
@@ -175,7 +173,7 @@ const ObstacleCourse = () => {
                   Submit
                 </button>
               </div>
-            ) : (
+            ) : !showConfirmation ? (
               <div className="loading-screen">
                 <div className="progress-container">
                   <div
@@ -209,7 +207,7 @@ const ObstacleCourse = () => {
                   Skip
                 </button>
               </div>
-            )}
+            ) : null}
           </div>
         )}
 
