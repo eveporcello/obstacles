@@ -3,7 +3,7 @@ import "media-chrome";
 import { MediaProvider } from "media-chrome/react/media-store";
 import Player from "./Player";
 import "./ObstacleCourse.css";
-import sunsetImageUrl from "./assets/sunset.jpg";
+import jasonHead from "./assets/jason-spinny-head.png";
 import waggingFingerGif from "./assets/wagging-finger.gif";
 
 const ObstacleCourse = () => {
@@ -30,7 +30,6 @@ const ObstacleCourse = () => {
     "nxzPZLvW02bQ4r4kSfeQwsYq6OwSx4tiH5f4IC1Uof01A"
   );
 
-  // Ref now points directly to the underlying <video> element
   const playerRef = useRef(null);
   const timeUpdateRef = useRef(null);
 
@@ -127,7 +126,6 @@ const ObstacleCourse = () => {
         if (videoEl) {
           const currentTime = videoEl.currentTime || 0;
           setVideoCurrentTime(currentTime);
-          // Example: trigger interruption at 3 seconds
           if (
             currentTime >= 3 &&
             !showInterruption &&
@@ -157,7 +155,7 @@ const ObstacleCourse = () => {
   return (
     <MediaProvider>
       <div className="player-container">
-        <Player src="https://stream.mux.com/DS00Spx1CV902MCtPj5WknGlR102V5HFkDe/high.mp4" />
+        <Player />
         {showLoadingQuiz && (
           <div className="overlay">
             {!quizSubmitted ? (
@@ -191,7 +189,7 @@ const ObstacleCourse = () => {
                 </div>
                 <p>{Math.floor(loadingProgress)}%</p>
                 <img
-                  src={sunsetImageUrl}
+                  src={jasonHead}
                   alt="Loading"
                   className="spinner"
                 />

@@ -7,6 +7,7 @@ import {
   useMediaSelector,
   MediaActionTypes
 } from "media-chrome/react/media-store";
+import "@mux/mux-video";
 
 const PlayButton = () => {
   const dispatch = useMediaDispatch();
@@ -159,9 +160,10 @@ const VolumeRange = () => {
 const Video = ({ src }) => {
   const mediaRefCallback = useMediaRef();
   return (
-    <video
+    <mux-video
       ref={mediaRefCallback}
       slot="media"
+      playbackId="ndBAM4NjPXRbTE01xtE4ywe7129zNYuEEiT2H59GJpzQ"
       src={src}
       preload="auto"
       muted
@@ -174,7 +176,7 @@ const Video = ({ src }) => {
         kind="metadata"
         src="https://image.mux.com/DS00Spx1CV902MCtPj5WknGlR102V5HFkDe/storyboard.vtt"
       />
-    </video>
+    </mux-video>
   );
 };
 
@@ -255,13 +257,5 @@ const Player = ({ src }) => {
     </MediaProvider>
   );
 };
-
-// function App() {
-//   return (
-//     <>
-//       <Player src="https://stream.mux.com/DS00Spx1CV902MCtPj5WknGlR102V5HFkDe/high.mp4" />
-//     </>
-//   );
-// }
 
 export default Player;
