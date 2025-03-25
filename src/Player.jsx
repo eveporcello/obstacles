@@ -24,7 +24,7 @@ const PlayButton = () => {
         dispatch({ type });
       }}
     >
-      {mediaPaused ? "Play" : "Pause"}
+      {mediaPaused ? "Click" : "Click"}
     </button>
   );
 };
@@ -44,7 +44,7 @@ const PlaybackRateButton = () => {
         dispatch({ type, detail });
       }}
     >
-      {mediaPlaybackRate}x
+      Play
     </button>
   );
 };
@@ -64,7 +64,7 @@ const MuteButton = () => {
         dispatch({ type });
       }}
     >
-      {mediaPseudoMuted ? "Unmute" : "Mute"}
+      {mediaPseudoMuted ? "Click" : "Click"}
     </button>
   );
 };
@@ -84,9 +84,7 @@ const FullscreenButton = () => {
         dispatch({ type });
       }}
     >
-      {!mediaIsFullscreen
-        ? "Enter Fullscreen"
-        : "Exit Fullscreen"}
+      {!mediaIsFullscreen ? "Play" : "Play"}
     </button>
   );
 };
@@ -187,7 +185,7 @@ const Player = ({ src }) => {
             bottom: 0,
             left: 0,
             width: "100%",
-            background: "rgba(0, 0, 0, 0.7)"
+            background: "rgba(200, 0, 0, 0.7)"
           }}
         >
           <div
@@ -214,9 +212,9 @@ const Player = ({ src }) => {
                 alignItems: "center"
               }}
             >
-              <PlayButton />
               <MuteButton />
               <VolumeRange />
+              <PlayButton />
             </div>
 
             <div style={{ flexGrow: 1 }}></div>
