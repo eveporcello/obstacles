@@ -187,7 +187,7 @@ const ObstacleCourse = () => {
         }
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
-      />
+      ></MuxPlayer>
 
       {showLoadingQuiz && (
         <div className="overlay">
