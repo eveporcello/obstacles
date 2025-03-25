@@ -6,7 +6,7 @@ function App() {
   return (
     <div className="app-container">
       <header>
-        <h1>Video</h1>
+        <h1>Large Obstacles</h1>
       </header>
 
       <div className="player-wrapper">

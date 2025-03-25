@@ -68,36 +68,6 @@ const MuteButton = () => {
   );
 };
 
-const CaptionsToggleButton = () => {
-  const dispatch = useMediaDispatch();
-  const mediaSubtitlesList =
-    useMediaSelector((state) => state.mediaSubtitlesList) ??
-    [];
-  const mediaSubtitlesShowing = useMediaSelector(
-    (state) => state.mediaSubtitlesShowing
-  );
-  const showingSubtitles = !!mediaSubtitlesShowing?.length;
-  return (
-    <button
-      style={{ cursor: "pointer" }}
-      disabled={!mediaSubtitlesList?.length}
-      onClick={() => {
-        const type = showingSubtitles
-          ? MediaActionTypes.MEDIA_DISABLE_SUBTITLES_REQUEST
-          : MediaActionTypes.MEDIA_SHOW_SUBTITLES_REQUEST;
-        const detail = showingSubtitles
-          ? mediaSubtitlesShowing
-          : [mediaSubtitlesList[0]];
-        dispatch({ type, detail });
-      }}
-    >
-      {showingSubtitles
-        ? "Disable Captions"
-        : "Enable Captions"}
-    </button>
-  );
-};
-
 const PipButton = () => {
   const dispatch = useMediaDispatch();
   const mediaIsPip = useMediaSelector(
@@ -197,19 +167,12 @@ const Video = ({ src }) => {
       muted
       crossOrigin=""
       playsInline
-      // controls
     >
       <track
         label="thumbnails"
         default
         kind="metadata"
         src="https://image.mux.com/DS00Spx1CV902MCtPj5WknGlR102V5HFkDe/storyboard.vtt"
-      />
-      <track
-        label="English"
-        kind="captions"
-        srcLang="en"
-        src="./vtt/en-cc.vtt"
       />
     </video>
   );
@@ -221,7 +184,6 @@ const Container = ({ children }) => {
     <div
       id="fullscreen"
       style={{
-        width: "100vw",
         display: "flex",
         flexDirection: "column"
       }}
@@ -238,21 +200,56 @@ const Player = ({ src }) => {
       <Container>
         <Video src={src} />
         <div
-          style={{ display: "flex", background: "black" }}
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            background: "rgba(0, 0, 0, 0.7)"
+          }}
         >
-          <TimeRange />
-        </div>
-        <div
-          style={{ display: "flex", background: "black" }}
-        >
-          <PlayButton />
-          <MuteButton />
-          <VolumeRange />
-          <div style={{ flexGrow: 1 }} />
-          <CaptionsToggleButton />
-          <PlaybackRateButton />
-          <PipButton />
-          <FullscreenButton />
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              padding: "5px 0"
+            }}
+          >
+            <TimeRange />
+          </div>
+
+          <div
+            style={{
+              display: "flex",
+              width: "100%",
+              padding: "5px 10px",
+              alignItems: "center"
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center"
+              }}
+            >
+              <PlayButton />
+              <MuteButton />
+              <VolumeRange />
+            </div>
+
+            <div style={{ flexGrow: 1 }}></div>
+
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center"
+              }}
+            >
+              <PlaybackRateButton />
+              <PipButton />
+              <FullscreenButton />
+            </div>
+          </div>
         </div>
       </Container>
     </MediaProvider>
