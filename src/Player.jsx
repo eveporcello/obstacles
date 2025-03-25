@@ -36,7 +36,7 @@ const PlaybackRateButton = () => {
   );
   return (
     <button
-      style={{ cursor: "pointer" }}
+      style={{ cursor: "crosshair" }}
       onClick={() => {
         const type =
           MediaActionTypes.MEDIA_PLAYBACK_RATE_REQUEST;
@@ -56,7 +56,7 @@ const MuteButton = () => {
   );
   return (
     <button
-      style={{ cursor: "pointer" }}
+      style={{ cursor: "crosshair" }}
       onClick={() => {
         const type = mediaPseudoMuted
           ? MediaActionTypes.MEDIA_UNMUTE_REQUEST
@@ -76,7 +76,7 @@ const FullscreenButton = () => {
   );
   return (
     <button
-      style={{ cursor: "pointer" }}
+      style={{ cursor: "crosshair" }}
       onClick={() => {
         const type = mediaIsFullscreen
           ? MediaActionTypes.MEDIA_EXIT_FULLSCREEN_REQUEST
