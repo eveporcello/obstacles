@@ -17,6 +17,7 @@ const PlayButton = () => {
   );
   return (
     <button
+      style={{ cursor: pointyCursor }}
       className="console-button"
       onClick={() => {
         const type = mediaPaused
@@ -142,7 +143,7 @@ const Video = ({ src }) => {
     <mux-video
       ref={mediaRefCallback}
       slot="media"
-      playbackId="ndBAM4NjPXRbTE01xtE4ywe7129zNYuEEiT2H59GJpzQ"
+      playbackId="FIsnFZTUItVF8biWYFYZzB01qk9wb2wOGyuLc6srsBEA"
       src={src}
       preload="auto"
       muted
@@ -153,7 +154,7 @@ const Video = ({ src }) => {
         label="thumbnails"
         default
         kind="metadata"
-        src="https://image.mux.com/DS00Spx1CV902MCtPj5WknGlR102V5HFkDe/storyboard.vtt"
+        src="https://image.mux.com/FIsnFZTUItVF8biWYFYZzB01qk9wb2wOGyuLc6srsBEA/storyboard.vtt"
       />
     </mux-video>
   );
