@@ -74,6 +74,7 @@ footer {
   font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: large;
   font-weight:bolder;
+  cursor: url("./assets/pointycursor.png")
 }
 
 .console-button:active {

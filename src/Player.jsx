@@ -8,6 +8,7 @@ import {
   MediaActionTypes
 } from "media-chrome/react/media-store";
 import "@mux/mux-video";
+import pointyCursor from "./assets/pointycursor.png";
 
 const PlayButton = () => {
   const dispatch = useMediaDispatch();
@@ -16,7 +17,6 @@ const PlayButton = () => {
   );
   return (
     <button
-      style={{ cursor: "pointer" }}
       className="console-button"
       onClick={() => {
         const type = mediaPaused
@@ -37,7 +37,6 @@ const PlaybackRateButton = () => {
   );
   return (
     <button
-      style={{ cursor: "pointer" }}
       className="console-button"
       onClick={() => {
         const type =
@@ -58,7 +57,6 @@ const MuteButton = () => {
   );
   return (
     <button
-      style={{ cursor: "pointer" }}
       className="console-button"
       onClick={() => {
         const type = mediaPseudoMuted
@@ -79,7 +77,6 @@ const FullscreenButton = () => {
   );
   return (
     <button
-      style={{ cursor: "pointer" }}
       className="console-button"
       onClick={() => {
         const type = mediaIsFullscreen

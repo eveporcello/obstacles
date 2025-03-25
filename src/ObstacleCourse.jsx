@@ -50,7 +50,7 @@ const ObstacleCourse = () => {
     );
     setLoadingTime(loadTime);
     setQuizSubmitted(true);
-    // Show confirmation dialog immediately after quiz is submitted
+
     setShowConfirmation(true);
   };
 
@@ -59,7 +59,6 @@ const ObstacleCourse = () => {
       setConfirmationAttempts((prev) => prev + 1);
       if (confirmationAttempts >= 2) {
         setShowConfirmation(false);
-        // Start loading progress after confirmation
         let progress = 0;
         const interval = setInterval(() => {
           progress += 100 / loadingTime;
@@ -129,8 +128,6 @@ const ObstacleCourse = () => {
         if (videoEl) {
           const currentTime = videoEl.currentTime || 0;
           setVideoCurrentTime(currentTime);
-
-          // First interruption at 3 seconds
           if (
             currentTime >= 3 &&
             currentTime < 4 &&
@@ -183,15 +180,16 @@ const ObstacleCourse = () => {
               </div>
             ) : !showConfirmation ? (
               <div className="loading-screen">
+                <p>
+                  Remember you said your favorite number was{" "}
+                  {favoriteNumber}? Wait {favoriteNumber}{" "}
+                  seconds.
+                </p>
                 <div className="progress-container">
                   <div
                     className="progress-bar"
                     style={{ width: `${loadingProgress}%` }}
                   ></div>
-                  <p>
-                    Great! Then you will love to wait{" "}
-                    {favoriteNumber} seconds.
-                  </p>
                 </div>
                 <p>{Math.floor(loadingProgress)}%</p>
                 <img
