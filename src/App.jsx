@@ -12,10 +12,6 @@ function App() {
       <div className="player-wrapper">
         <ObstacleCourse />
       </div>
-
-      <footer>
-        <p>{new Date().getFullYear()}</p>
-      </footer>
     </div>
   );
 }

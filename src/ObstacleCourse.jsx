@@ -147,7 +147,7 @@ const ObstacleCourse = () => {
     videoStarted,
     isPlaying,
     showInterruption,
-    interruptionAttempts  
+    interruptionAttempts
   ]);
 
   return (
@@ -222,9 +222,7 @@ const ObstacleCourse = () => {
                   className="wagging-finger"
                 />
               </div>
-              <p>
-                Are you sure you want to watch this?
-              </p>
+              <p>Are you sure you want to watch this?</p>
               <div className="confirmation-buttons">
                 <button
                   onClick={() => handleConfirmation(true)}
