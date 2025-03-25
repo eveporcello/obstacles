@@ -216,7 +216,7 @@ const ObstacleCourse = () => {
         {showConfirmation && (
           <div className="overlay">
             <div className="confirmation-dialog">
-              <h2>Are you sure you want to watch this?</h2>
+              <h2>ah, ah ah</h2>
               <div className="wagging-finger-container">
                 <img
                   src={waggingFingerGif}
@@ -225,7 +225,7 @@ const ObstacleCourse = () => {
                 />
               </div>
               <p>
-                We want to make sure you want to watch this.
+                Are you sure you want to watch this?
               </p>
               <div className="confirmation-buttons">
                 <button
